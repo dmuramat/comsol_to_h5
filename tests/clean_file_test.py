@@ -35,15 +35,9 @@ def test_df() -> pd.DataFrame:
         # generate df from cleaned file from test_files/decaying_pi.txt to test
         # if it is read in properly into df
         temp_file = temp_dir + '/test_file_1.txt'
-        comsol_to_h5.clean_file('test_files/decaying_pi.txt', temp_file, column_description_line=7)
-        return pd.read_csv(temp_file, header=7, delimiter = ';')
+        comsol_to_h5.clean_file('test_files/decaying_pi.txt', temp_file)
+        return comsol_to_h5.read_from_comsol_native_csv(temp_file)
 
-
-# def test_temp_file(temporary_test_txt_file):
-#     with open(temporary_test_txt_file, 'r') as handle:
-#         lines = handle.readlines()
-#         for line in lines:
-#             print(lines)
 
 def test_pandas_import(temporary_test_txt_file):
     """test whether pandas can read in data from cleaned text file
@@ -62,7 +56,7 @@ def test_read_in_description_line(test_df):
     Args:
         test_df (_type_): test df fixture
     """
-    columns = '% X;u @ t=0, offset=0;u @ t=0.1, offset=0;u @ t=0.2, offset=0;u @ t=0.3, offset=0;u @ t=0.4, offset=0;u @ t=0.5, offset=0;u @ t=0.6, offset=0;u @ t=0.7, offset=0;u @ t=0.8, offset=0;u @ t=0.9, offset=0;u @ t=1, offset=0;u @ t=0, offset=1.5708;u @ t=0.1, offset=1.5708;u @ t=0.2, offset=1.5708;u @ t=0.3, offset=1.5708;u @ t=0.4, offset=1.5708;u @ t=0.5, offset=1.5708;u @ t=0.6, offset=1.5708;u @ t=0.7, offset=1.5708;u @ t=0.8, offset=1.5708;u @ t=0.9, offset=1.5708;u @ t=1, offset=1.5708'.split(';')
+    columns = 'X;u @ t=0, offset=0;u @ t=0.1, offset=0;u @ t=0.2, offset=0;u @ t=0.3, offset=0;u @ t=0.4, offset=0;u @ t=0.5, offset=0;u @ t=0.6, offset=0;u @ t=0.7, offset=0;u @ t=0.8, offset=0;u @ t=0.9, offset=0;u @ t=1, offset=0;u @ t=0, offset=1.5708;u @ t=0.1, offset=1.5708;u @ t=0.2, offset=1.5708;u @ t=0.3, offset=1.5708;u @ t=0.4, offset=1.5708;u @ t=0.5, offset=1.5708;u @ t=0.6, offset=1.5708;u @ t=0.7, offset=1.5708;u @ t=0.8, offset=1.5708;u @ t=0.9, offset=1.5708;u @ t=1, offset=1.5708'.split(';')
     for col_test, col_df in zip(columns, test_df.columns):
         assert col_test == col_df
 
@@ -73,5 +67,3 @@ def test_row_number_df(test_df):
         test_df (_type_): test df fixture
     """
     assert len(test_df) == 64
-    
-

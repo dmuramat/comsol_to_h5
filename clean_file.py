@@ -33,13 +33,20 @@ def clean_file(filename_original: str, filename_clean: str, column_description_l
                     line = line.replace('@', ' @ ')
                     line = line.replace(',', ', ')
                     line = line.replace('%', '% ')
-                    # line = line[2:]
                 cleaned_file.write(line)
 
             else:
                 while '  ' in line:
                     line = line.replace('  ', ' ')
+                line = line.replace(' @ ', '@')
+                line = line.replace(', ', ',')
+                line = line.replace('% ', '%')
+                #introduce separator
                 line = line.replace(' ', ';')
+                # comply with COMSOL ';'-separated csv format
+                line = line.replace('@', ' @ ')
+                line = line.replace(',', ', ')
+                line = line.replace('%', '% ')
                 cleaned_file.write(line)
 
             line_number += 1
