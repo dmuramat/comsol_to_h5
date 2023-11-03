@@ -33,7 +33,6 @@ def clean_file(filename_original: str, filename_clean: str, column_description_l
                     line = line.replace('@', ' @ ')
                     line = line.replace(',', ', ')
                     line = line.replace('%', '% ')
-                    # line = line[2:]
                 cleaned_file.write(line)
 
             else:
