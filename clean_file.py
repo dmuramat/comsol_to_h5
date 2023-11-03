@@ -1,5 +1,5 @@
 
-def clean_file(filename_original: str, filename_clean: str, column_description_line = -1) -> None:
+def clean_file(filename_original: str, filename_clean: str) -> None:
     """cleans comsol txt file such that it can be read into pandas
 
     Args:
@@ -12,36 +12,19 @@ def clean_file(filename_original: str, filename_clean: str, column_description_l
     cleaned_file = open(filename_clean, 'w')
 
     with open(filename_original, 'r') as handle:
-        line_number = 0
         for line in handle:
-            if column_description_line > -1:
-
-                # clean spaces from columns and replace with ';'
-                if line_number > column_description_line:
-                    while '  ' in line:
-                        line = line.replace('  ', ' ')
-                    line = line.replace(' ', ';')
-                if line_number == column_description_line:
-                    while '  ' in line:
-                        line = line.replace('  ', ' ')
-                    line = line.replace(' @ ', '@')
-                    line = line.replace(', ', ',')
-                    line = line.replace('% ', '%')
-                    #introduce separator
-                    line = line.replace(' ', ';')
-                    # comply with COMSOL ';'-separated csv format
-                    line = line.replace('@', ' @ ')
-                    line = line.replace(',', ', ')
-                    line = line.replace('%', '% ')
-                    # line = line[2:]
-                cleaned_file.write(line)
-
-            else:
-                while '  ' in line:
-                    line = line.replace('  ', ' ')
-                line = line.replace(' ', ';')
-                cleaned_file.write(line)
-
-            line_number += 1
+            while '  ' in line:
+                line = line.replace('  ', ' ')
+            line = line.replace(' @ ', '@')
+            line = line.replace(', ', ',')
+            line = line.replace('% ', '%')
+            #introduce separator
+            line = line.replace(' ', ';')
+            # comply with COMSOL ';'-separated csv format
+            line = line.replace('@', ' @ ')
+            line = line.replace(',', ', ')
+            line = line.replace('%', '% ')
+            # line = line[2:]
+            cleaned_file.write(line)
 
     cleaned_file.close()
