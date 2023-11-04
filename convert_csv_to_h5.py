@@ -1,8 +1,9 @@
-#!/bin/python3
 import sys
 import getopt
 import tempfile
-import comsol_to_h5
+from write_time_steps import write_data_to_h5, read_from_comsol_native_csv,\
+    extract_parameters_static
+from clean_file import clean_file
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
@@ -43,25 +44,24 @@ if __name__ == "__main__":
 
     # check right specification of file format
     if FILE_FORMAT not in ('csv', 'columnar'):
-        raise RuntimeError('file format specified was \'' + FILE_FORMAT + '\', ' +
-                           'valid formats are \';\'-separated csv and columnar.')
+        raise ValueError('file format specified was \'' + FILE_FORMAT + '\', ' +
+                           'valid formats are \';\'-separated csv (\'csv\') and \'columnar\'.')
 
     FILE_DF = None
 
     # read in file
     if FILE_FORMAT == 'csv':
-        FILE_DF = comsol_to_h5.read_from_comsol_native_csv(INPUT_FILE_NAME)
+        FILE_DF = read_from_comsol_native_csv(INPUT_FILE_NAME)
     elif FILE_FORMAT == 'columnar':
         with tempfile.TemporaryDirectory() as TEMP_DIR:
             TEMP_FILE_NAME = TEMP_DIR + "/cleaned.txt"
-            comsol_to_h5.clean_file(INPUT_FILE_NAME, TEMP_FILE_NAME, HEADER_LINE_NUMBER)
-            FILE_DF = comsol_to_h5.read_from_comsol_native_csv(TEMP_FILE_NAME)
+            clean_file(INPUT_FILE_NAME, TEMP_FILE_NAME, HEADER_LINE_NUMBER)
+            FILE_DF = read_from_comsol_native_csv(TEMP_FILE_NAME)
 
 
     STATIC_PARAMETER_DICT = None
     if PARAMETER_FILE_NAME is not None:
-        STATIC_PARAMETER_DICT = comsol_to_h5.extract_parameters_static(PARAMETER_FILE_NAME)
+        STATIC_PARAMETER_DICT = extract_parameters_static(PARAMETER_FILE_NAME)
 
-    else:
-        comsol_to_h5.write_data_to_h5(FILE_DF, OUTPUT_FILE_NAME, 
+    write_data_to_h5(FILE_DF, OUTPUT_FILE_NAME, 
                                       parameters_static=STATIC_PARAMETER_DICT)
